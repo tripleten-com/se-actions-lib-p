@@ -3,11 +3,18 @@
   "version": "0.0.1",
   "type": "module",
   "files": [
-    "dist"
+    "dist",
+    "bin"
   ],
   "main": "dist/index.js",
   "module": "dist/index.js",
   "exports": "./dist/index.js",
+  "bin": {
+    "se-pre-run": "./bin/pre-run.sh",
+    "se-pre-endpoints": "./bin/pre-endpoints.sh",
+    "se-newman": "./bin/newman.sh",
+    "se-test-mesh-ai-part1": "./bin/test-mesh-ai-part1.sh"
+  },
   "scripts": {
     "test": "vitest",
     "build": "rollup --config rollup.config.js"
