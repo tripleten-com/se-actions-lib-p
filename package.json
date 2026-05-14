@@ -1,0 +1,34 @@
+{
+  "name": "se-actions-lib",
+  "version": "0.0.1",
+  "type": "module",
+  "files": [
+    "dist"
+  ],
+  "main": "dist/actions-lib.umd.cjs",
+  "module": "dist/actions-lib.js",
+  "exports": {
+    ".": {
+      "import": "./dist/actions-lib.js",
+      "require": "./dist/actions-lib.umd.cjs"
+    }
+  },
+  "scripts": {
+    "build": "vite build"
+  },
+  "keywords": [
+    "actions",
+    "library",
+    "tripleten",
+    "github",
+    "actions",
+    "javascript"
+  ],
+  "author": "TripleTen",
+  "license": "MIT",
+  "description": "TripleTen Actions Library",
+  "dependencies": {
+    "eslint": "^9.39.4",
+    "vite": "^8.0.13"
+  }
+}
