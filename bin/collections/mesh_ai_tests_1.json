@@ -1,7 +1,7 @@
 {
   "info": {
     "_postman_id": "1d11a598-d7f5-47dd-9e12-8c2f753bf780",
-    "name": "Mesh AI Tests",
+    "name": "Mesh AI Tests [1]",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
     "_exporter_id": "40482199",
     "_collection_link": "https://go.postman.co/collection/40482199-1d11a598-d7f5-47dd-9e12-8c2f753bf780?source=collection_link"
@@ -359,66 +359,6 @@
           "response": []
         },
         {
-          "name": "Update",
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "exec": [
-                  "pm.test(\"Status code is 200\", function () {",
-                  "  pm.response.to.have.status(200);",
-                  "});"
-                ],
-                "type": "text/javascript",
-                "packages": {},
-                "requests": {}
-              }
-            },
-            {
-              "listen": "prerequest",
-              "script": {
-                "exec": [
-                  "pm.collectionVariables.set(\"chat_id\", \"12345\");"
-                ],
-                "type": "text/javascript",
-                "packages": {},
-                "requests": {}
-              }
-            }
-          ],
-          "request": {
-            "method": "PATCH",
-            "header": [],
-            "body": {
-              "mode": "raw",
-              "raw": "",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "{{base_url}}/chats/:id",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "chats",
-                ":id"
-              ],
-              "variable": [
-                {
-                  "key": "id",
-                  "value": "{{chat_id}}"
-                }
-              ]
-            },
-            "description": "Update chat metadata"
-          },
-          "response": []
-        },
-        {
           "name": "Delete",
           "event": [
             {
@@ -634,66 +574,6 @@
           "response": []
         },
         {
-          "name": "Update",
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "exec": [
-                  "pm.test(\"Status code is 200\", function () {",
-                  "  pm.response.to.have.status(200);",
-                  "});"
-                ],
-                "type": "text/javascript",
-                "packages": {},
-                "requests": {}
-              }
-            },
-            {
-              "listen": "prerequest",
-              "script": {
-                "exec": [
-                  "pm.collectionVariables.set(\"document_id\", \"12345\");"
-                ],
-                "type": "text/javascript",
-                "packages": {},
-                "requests": {}
-              }
-            }
-          ],
-          "request": {
-            "method": "PATCH",
-            "header": [],
-            "body": {
-              "mode": "raw",
-              "raw": "",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "{{base_url}}/documents/:id",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "documents",
-                ":id"
-              ],
-              "variable": [
-                {
-                  "key": "id",
-                  "value": "{{document_id}}"
-                }
-              ]
-            },
-            "description": "Update document metadata"
-          },
-          "response": []
-        },
-        {
           "name": "Delete",
           "event": [
             {
@@ -750,67 +630,6 @@
               ]
             },
             "description": "Delete a document"
-          },
-          "response": []
-        },
-        {
-          "name": "Ingest",
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "exec": [
-                  "pm.test(\"Status code is 202\", function () {",
-                  "  pm.response.to.have.status(202);",
-                  "});"
-                ],
-                "type": "text/javascript",
-                "packages": {},
-                "requests": {}
-              }
-            },
-            {
-              "listen": "prerequest",
-              "script": {
-                "exec": [
-                  "pm.collectionVariables.set(\"document_id\", \"12345\");"
-                ],
-                "type": "text/javascript",
-                "packages": {},
-                "requests": {}
-              }
-            }
-          ],
-          "request": {
-            "method": "POST",
-            "header": [],
-            "body": {
-              "mode": "raw",
-              "raw": "",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "{{base_url}}/documents/:id/ingest",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "documents",
-                ":id",
-                "ingest"
-              ],
-              "variable": [
-                {
-                  "key": "id",
-                  "value": "{{document_id}}"
-                }
-              ]
-            },
-            "description": "Start document ingestion (async)"
           },
           "response": []
         }

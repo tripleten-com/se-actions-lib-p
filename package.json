@@ -17,6 +17,7 @@
   },
   "scripts": {
     "test": "vitest",
+    "lint": "eslint src",
     "build": "rollup --config rollup.config.js"
   },
   "keywords": [
@@ -34,14 +35,16 @@
     "@rollup/plugin-terser": "^1.0.0",
     "@rollup/plugin-typescript": "^12.3.0",
     "@tsconfig/node22": "^22.0.5",
-    "eslint": "^9.39.4",
+    "eslint": "^10.3.0",
     "rollup": "^4.60.3",
-    "rollup-plugin-delete": "^3.0.2",
-    "typescript-eslint": "^8.59.3"
+    "rollup-plugin-delete": "^3.0.2"
   },
   "devDependencies": {
+    "@eslint/js": "^10.0.1",
     "@types/node": "^25.7.0",
+    "eslint-config-prettier": "^10.1.8",
     "memfs": "^4.57.2",
+    "typescript-eslint": "^8.59.2",
     "vitest": "^3.2.4"
   }
 }
