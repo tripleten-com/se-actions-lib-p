@@ -1,0 +1,1271 @@
+{
+  "info": {
+    "_postman_id": "8fc73ee9-309f-4f9e-af14-0e477684dcb8",
+    "name": "Mesh AI Tests [2]",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "40482199",
+    "_collection_link": "https://go.postman.co/collection/40482199-8fc73ee9-309f-4f9e-af14-0e477684dcb8?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "[-] Register",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 400\", function () {",
+                  "  pm.response.to.have.status(400);",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"{{$randomFullName}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/register",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "register"
+              ]
+            },
+            "description": "Create a new user account"
+          },
+          "response": []
+        },
+        {
+          "name": "[-] Register",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 400\", function () {",
+                  "  pm.response.to.have.status(400);",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"{{$randomFullName}}\",\n    \"email\": \"{{$randomEmail}}\",\n    \"password\": \"1234afb\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/register",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "register"
+              ]
+            },
+            "description": "Create a new user account"
+          },
+          "response": []
+        },
+        {
+          "name": "[+] Register",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 201\", function () {",
+                  "  pm.response.to.have.status(201);",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"{{$randomFullName}}\",\n    \"email\": \"{{$randomEmail}}\",\n    \"password\": \"{{$randomPassword}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/register",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "register"
+              ]
+            },
+            "description": "Create a new user account"
+          },
+          "response": []
+        },
+        {
+          "name": "[-] Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 400\", function () {",
+                  "  pm.response.to.have.status(400);",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"email\": \"test_user@example.com\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/login",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            },
+            "description": "Authenticate user"
+          },
+          "response": []
+        },
+        {
+          "name": "[-] Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 401\", function () {",
+                  "  pm.response.to.have.status(401);",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "try {",
+                  "    // Send a request to auth/register",
+                  "    const response = await pm.sendRequest({",
+                  "        url: pm.collectionVariables.get(\"base_url\") + \"/auth/register\",",
+                  "        method: \"POST\",",
+                  "        header: {",
+                  "            \"Content-Type\": \"application/json\"",
+                  "        },",
+                  "        body: JSON.stringify({",
+                  "            name: \"Test User\",",
+                  "            email: \"test_user@example.com\",",
+                  "            password: \"1234abcd@\",",
+                  "        })",
+                  "    });",
+                  "",
+                  "    ",
+                  "} catch (e) {",
+                  "    console.log(e);",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"email\": \"test_user@example.com\",\n    \"password\": \"1234abcd\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/login",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            },
+            "description": "Authenticate user"
+          },
+          "response": []
+        },
+        {
+          "name": "[+] Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "  pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "// response data has token",
+                  "pm.test(\"Response data has token\", function () {",
+                  "    const token = pm.response.json()?.data?.token;",
+                  "    pm.expect(token).not.to.be.undefined();",
+                  "    pm.collectionVariables.set(\"auth_token\", token);",
+                  "});",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "try {",
+                  "    // Send a request to auth/register",
+                  "    const response = await pm.sendRequest({",
+                  "        url: pm.collectionVariables.get(\"base_url\") + \"/auth/register\",",
+                  "        method: \"POST\",",
+                  "        header: {",
+                  "            \"Content-Type\": \"application/json\"",
+                  "        },",
+                  "        body: JSON.stringify({",
+                  "            name: \"Test User\",",
+                  "            email: \"test_user@example.com\",",
+                  "            password: \"1234abcd@\",",
+                  "        })",
+                  "    });",
+                  "",
+                  "    ",
+                  "} catch (e) {",
+                  "    console.log(e);",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"email\": \"test_user@example.com\",\n    \"password\": \"1234abcd@\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/login",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            },
+            "description": "Authenticate user"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Chats",
+      "item": [
+        {
+          "name": "[-] Create",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 400\", function () {",
+                  "  pm.response.to.have.status(400);",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"title\": \"\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/chats",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "chats"
+              ]
+            },
+            "description": "Create a new chat session"
+          },
+          "response": []
+        },
+        {
+          "name": "[+] Create",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 201\", function () {",
+                  "  pm.response.to.have.status(201);",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"title\": \"{{$randomLoremText}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/chats",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "chats"
+              ]
+            },
+            "description": "Create a new chat session"
+          },
+          "response": []
+        },
+        {
+          "name": "[-] List",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 401\", function () {",
+                  "  pm.response.to.have.status(401);",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/chats",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "chats"
+              ]
+            },
+            "description": "List all chats for current user"
+          },
+          "response": []
+        },
+        {
+          "name": "[+] List",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "  pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/chats",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "chats"
+              ]
+            },
+            "description": "List all chats for current user"
+          },
+          "response": []
+        },
+        {
+          "name": "[+] Get by ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "  pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "try {",
+                  "    const title = pm.variables.replaceIn(\"{{$randomLoremWords}}\")",
+                  "    const response = await pm.sendRequest({",
+                  "        url: pm.collectionVariables.get(\"base_url\") + \"/chats\",",
+                  "        method: \"POST\",",
+                  "        header: {",
+                  "            \"Content-Type\": \"application/json\",",
+                  "            \"Authorization\": \"Bearer \" + pm.collectionVariables.get(\"auth_token\"),",
+                  "        },",
+                  "        body: JSON.stringify({ title })",
+                  "    });",
+                  "    const result = await response.json();",
+                  "    console.log(\"[ID] result: \", result);",
+                  "    if (result?.data?._id) {",
+                  "        pm.collectionVariables.set(\"chat_id\", result.data._id);",
+                  "    }",
+                  "} catch (e) {",
+                  "    console.log(e);",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/chats/:id",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "chats",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "{{chat_id}}"
+                }
+              ]
+            },
+            "description": "Fetch one chat by ID"
+          },
+          "response": []
+        },
+        {
+          "name": "[-] Send Message",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 400\", function () {",
+                  "  pm.response.to.have.status(400);",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.collectionVariables.set(\"chat_id\", \"12345\");"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/chats/:id/messages",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "chats",
+                ":id",
+                "messages"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "{{chat_id}}"
+                }
+              ]
+            },
+            "description": "Send a message and get reply"
+          },
+          "response": []
+        },
+        {
+          "name": "[+] Send Message",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 201\", function () {",
+                  "  pm.response.to.have.status(201);",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "try {",
+                  "    const title = pm.variables.replaceIn(\"{{$randomLoremWords}}\")",
+                  "    const response = await pm.sendRequest({",
+                  "        url: pm.collectionVariables.get(\"base_url\") + \"/chats\",",
+                  "        method: \"POST\",",
+                  "        header: {",
+                  "            \"Content-Type\": \"application/json\",",
+                  "            \"Authorization\": \"Bearer \" + pm.collectionVariables.get(\"auth_token\"),",
+                  "        },",
+                  "        body: JSON.stringify({ title })",
+                  "    });",
+                  "    const result = await response.json();",
+                  "    if (result?.data?._id) {",
+                  "        pm.collectionVariables.set(\"chat_id\", result.data._id);",
+                  "    }",
+                  "} catch (e) {",
+                  "    console.log(e);",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"question\": \"{{$randomLoremSentence}}?\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/chats/:id/messages",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "chats",
+                ":id",
+                "messages"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "{{chat_id}}"
+                }
+              ]
+            },
+            "description": "Send a message and get reply"
+          },
+          "response": []
+        }
+      ],
+      "auth": {
+        "type": "bearer",
+        "bearer": [
+          {
+            "key": "token",
+            "value": "{{auth_token}}",
+            "type": "string"
+          }
+        ]
+      },
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {},
+            "exec": [
+              "const email = \"test_user@example.com\";",
+              "const password = \"1234abcd@\";",
+              "",
+              "try {",
+              "    await pm.sendRequest({",
+              "        url: pm.collectionVariables.get(\"base_url\") + \"/auth/register\",",
+              "        method: \"POST\",",
+              "        header: {",
+              "            \"Content-Type\": \"application/json\"",
+              "        },",
+              "        body: JSON.stringify({",
+              "            name: \"Test User\",",
+              "            email,",
+              "            password,",
+              "        })",
+              "    });",
+              "    ",
+              "} catch (e) {",
+              "    console.log(e);",
+              "}",
+              "",
+              "try {",
+              "    const response = await pm.sendRequest({",
+              "        method: 'POST',",
+              "        url: pm.collectionVariables.get('base_url') + \"/auth/login\",",
+              "\t\t\t\theader: {",
+              "            \"Content-Type\": \"application/json\"",
+              "        },",
+              "        body: JSON.stringify({ email, password }),",
+              "    });",
+              "    const result = await response.json();",
+              "    if (result?.data?.token) {",
+              "        pm.collectionVariables.set('auth_token', result.data.token);",
+              "    }",
+              "} catch (e) {",
+              "    console.log(e);",
+              "}",
+              ""
+            ]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {},
+            "exec": [
+              ""
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Documents",
+      "item": [
+        {
+          "name": "[-] Create",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// No file sent",
+                  "pm.test(\"Status code is 400\", function () {",
+                  "  pm.response.to.have.status(400);",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/documents",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "documents"
+              ]
+            },
+            "description": "Upload a document"
+          },
+          "response": []
+        },
+        {
+          "name": "[+] Create",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 201\", function () {",
+                  "  pm.response.to.have.status(201);",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "file",
+              "file": {}
+            },
+            "url": {
+              "raw": "{{base_url}}/documents",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "documents"
+              ]
+            },
+            "description": "Upload a document"
+          },
+          "response": []
+        },
+        {
+          "name": "[+] List",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "  pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/documents",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "documents"
+              ]
+            },
+            "description": "List documents for current user"
+          },
+          "response": []
+        }
+      ],
+      "auth": {
+        "type": "bearer",
+        "bearer": [
+          {
+            "key": "token",
+            "value": "{{auth_token}}",
+            "type": "string"
+          }
+        ]
+      },
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {},
+            "exec": [
+              "const email = \"test_user@example.com\";",
+              "const password = \"1234abcd@\";",
+              "",
+              "try {",
+              "    await pm.sendRequest({",
+              "        url: pm.collectionVariables.get(\"base_url\") + \"/auth/register\",",
+              "        method: \"POST\",",
+              "        header: {",
+              "            \"Content-Type\": \"application/json\"",
+              "        },",
+              "        body: JSON.stringify({",
+              "            name: \"Test User\",",
+              "            email,",
+              "            password,",
+              "        })",
+              "    });",
+              "    ",
+              "} catch (e) {",
+              "    console.log(e);",
+              "}",
+              "",
+              "try {",
+              "    const response = await pm.sendRequest({",
+              "        method: 'POST',",
+              "        url: pm.collectionVariables.get('base_url') + \"/auth/login\",",
+              "\t\t\t\theader: {",
+              "            \"Content-Type\": \"application/json\"",
+              "        },",
+              "        body: JSON.stringify({ email, password }),",
+              "    });",
+              "    const result = await response.json();",
+              "    if (result?.data?.token) {",
+              "        pm.collectionVariables.set('auth_token', result.data.token);",
+              "    }",
+              "} catch (e) {",
+              "    console.log(e);",
+              "}",
+              ""
+            ]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {},
+            "exec": [
+              ""
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Query & RAG",
+      "item": [
+        {
+          "name": "[-] Ask",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 400\", function () {",
+                  "  pm.response.to.have.status(400);",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/query",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "query"
+              ]
+            },
+            "description": "Ask a question and get answer"
+          },
+          "response": []
+        },
+        {
+          "name": "[+] Ask",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "  pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"question\": \"{{$randomLoremParagraph}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/query",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "query"
+              ]
+            },
+            "description": "Ask a question and get answer"
+          },
+          "response": []
+        }
+      ],
+      "auth": {
+        "type": "bearer",
+        "bearer": [
+          {
+            "key": "token",
+            "value": "{{auth_token}}",
+            "type": "string"
+          }
+        ]
+      },
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {},
+            "exec": [
+              "const email = \"test_user@example.com\";",
+              "const password = \"1234abcd@\";",
+              "",
+              "try {",
+              "    await pm.sendRequest({",
+              "        url: pm.collectionVariables.get(\"base_url\") + \"/auth/register\",",
+              "        method: \"POST\",",
+              "        header: {",
+              "            \"Content-Type\": \"application/json\"",
+              "        },",
+              "        body: JSON.stringify({",
+              "            name: \"Test User\",",
+              "            email,",
+              "            password,",
+              "        })",
+              "    });",
+              "    ",
+              "} catch (e) {",
+              "    console.log(e);",
+              "}",
+              "",
+              "try {",
+              "    const response = await pm.sendRequest({",
+              "        method: 'POST',",
+              "        url: pm.collectionVariables.get('base_url') + \"/auth/login\",",
+              "\t\t\t\theader: {",
+              "            \"Content-Type\": \"application/json\"",
+              "        },",
+              "        body: JSON.stringify({ email, password }),",
+              "    });",
+              "    const result = await response.json();",
+              "    if (result?.data?.token) {",
+              "        pm.collectionVariables.set('auth_token', result.data.token);",
+              "    }",
+              "} catch (e) {",
+              "    console.log(e);",
+              "}",
+              ""
+            ]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {},
+            "exec": [
+              ""
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": ""
+    },
+    {
+      "key": "chat_id",
+      "value": ""
+    },
+    {
+      "key": "document_id",
+      "value": ""
+    },
+    {
+      "key": "auth_token",
+      "value": ""
+    }
+  ]
+}
