@@ -1,6 +1,6 @@
 {
   "name": "se-actions-lib",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "type": "module",
   "files": [
     "dist",
@@ -13,7 +13,10 @@
     "se-pre-run": "./bin/pre-run.sh",
     "se-pre-endpoints": "./bin/pre-endpoints.sh",
     "se-newman": "./bin/newman.sh",
-    "se-test-mesh-ai-part1": "./bin/test-mesh-ai-part1.sh"
+    "se-actions-main": "./bin/main.sh",
+    "se-test-mesh-ai-part1": "./bin/test-mesh-ai-part1.sh",
+    "se-test-mesh-ai-part2": "./bin/test-mesh-ai-part2.sh",
+    "se-test-mesh-ai-part3": "./bin/test-mesh-ai-part3.sh"
   },
   "scripts": {
     "test": "vitest",
