@@ -11,7 +11,7 @@
       "name": "Auth",
       "item": [
         {
-          "name": "[-] Register",
+          "name": "[-] Register (Missing field)",
           "event": [
             {
               "listen": "test",
@@ -19,6 +19,10 @@
                 "exec": [
                   "pm.test(\"Status code is 400\", function () {",
                   "  pm.response.to.have.status(400);",
+                  "});",
+                  "",
+                  "pm.test(\"Response body contains 'Invalid email format'\", function () {",
+                  "    pm.expect(pm.response.text()).to.include('required');",
                   "});"
                 ],
                 "type": "text/javascript",
@@ -28,6 +32,9 @@
             }
           ],
           "request": {
+            "auth": {
+              "type": "noauth"
+            },
             "method": "POST",
             "header": [],
             "body": {
@@ -41,28 +48,48 @@
             },
             "url": {
               "raw": "{{base_url}}/auth/register",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "auth",
-                "register"
-              ]
+              "host": ["{{base_url}}"],
+              "path": ["auth", "register"]
             },
             "description": "Create a new user account"
           },
           "response": []
         },
         {
-          "name": "[-] Register",
+          "name": "[-] Register (Email in use)",
           "event": [
             {
               "listen": "test",
               "script": {
                 "exec": [
-                  "pm.test(\"Status code is 400\", function () {",
-                  "  pm.response.to.have.status(400);",
+                  "pm.test(\"Status code is 409\", function () {",
+                  "  pm.response.to.have.status(409);",
+                  "});",
+                  "",
+                  "pm.test(\"Throws when email is already in use\", function () {",
+                  "    pm.expect(pm.response.json().error.message).to.contain(\"Email\");",
                   "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "const email = pm.variables.get(\"test_user_email_2\");",
+                  "const password = pm.variables.get(\"test_user_pwd_2\");",
+                  "const name = \"Test User\";",
+                  "",
+                  "pm.sendRequest({",
+                  "    url: pm.variables.get(\"base_url\") + \"/auth/register\",",
+                  "    method: \"POST\",",
+                  "    header: { \"Content-Type\": \"application/json\" },",
+                  "    body: JSON.stringify({ name, email, password })",
+                  "}, function(err, response) {});",
+                  ""
                 ],
                 "type": "text/javascript",
                 "packages": {},
@@ -71,11 +98,14 @@
             }
           ],
           "request": {
+            "auth": {
+              "type": "noauth"
+            },
             "method": "POST",
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"name\": \"{{$randomFullName}}\",\n    \"email\": \"{{$randomEmail}}\",\n    \"password\": \"1234afb\"\n}",
+              "raw": "{\n    \"name\": \"{{$randomFullName}}\",\n    \"email\": \"{{test_user_email_2}}\",\n    \"password\": \"{{test_user_pwd_2}}\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -84,20 +114,15 @@
             },
             "url": {
               "raw": "{{base_url}}/auth/register",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "auth",
-                "register"
-              ]
+              "host": ["{{base_url}}"],
+              "path": ["auth", "register"]
             },
             "description": "Create a new user account"
           },
           "response": []
         },
         {
-          "name": "[+] Register",
+          "name": "[+] Register (Success)",
           "event": [
             {
               "listen": "test",
@@ -105,8 +130,24 @@
                 "exec": [
                   "pm.test(\"Status code is 201\", function () {",
                   "  pm.response.to.have.status(201);",
+                  "});",
+                  "",
+                  "",
+                  "pm.test(\"Response body contains expected fields\", function () {",
+                  "    pm.response.to.have.jsonBody(\"data.userId\");",
+                  "    pm.response.to.have.jsonBody(\"data.email\");",
+                  "    pm.response.to.have.jsonBody(\"data.name\");",
                   "});"
                 ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [""],
                 "type": "text/javascript",
                 "packages": {},
                 "requests": {}
@@ -114,6 +155,9 @@
             }
           ],
           "request": {
+            "auth": {
+              "type": "noauth"
+            },
             "method": "POST",
             "header": [],
             "body": {
@@ -127,29 +171,20 @@
             },
             "url": {
               "raw": "{{base_url}}/auth/register",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "auth",
-                "register"
-              ]
+              "host": ["{{base_url}}"],
+              "path": ["auth", "register"]
             },
             "description": "Create a new user account"
           },
           "response": []
         },
         {
-          "name": "[-] Login",
+          "name": "[-] Login (Missing field)",
           "event": [
             {
               "listen": "test",
               "script": {
-                "exec": [
-                  "pm.test(\"Status code is 400\", function () {",
-                  "  pm.response.to.have.status(400);",
-                  "});"
-                ],
+                "exec": ["pm.test(\"Status code is 400\", function () {", "  pm.response.to.have.status(400);", "});"],
                 "type": "text/javascript",
                 "packages": {},
                 "requests": {}
@@ -158,9 +193,7 @@
             {
               "listen": "prerequest",
               "script": {
-                "exec": [
-                  ""
-                ],
+                "exec": [""],
                 "type": "text/javascript",
                 "packages": {},
                 "requests": {}
@@ -168,6 +201,9 @@
             }
           ],
           "request": {
+            "auth": {
+              "type": "noauth"
+            },
             "method": "POST",
             "header": [],
             "body": {
@@ -181,29 +217,20 @@
             },
             "url": {
               "raw": "{{base_url}}/auth/login",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "auth",
-                "login"
-              ]
+              "host": ["{{base_url}}"],
+              "path": ["auth", "login"]
             },
             "description": "Authenticate user"
           },
           "response": []
         },
         {
-          "name": "[-] Login",
+          "name": "[-] Login (Wrong credentials)",
           "event": [
             {
               "listen": "test",
               "script": {
-                "exec": [
-                  "pm.test(\"Status code is 401\", function () {",
-                  "  pm.response.to.have.status(401);",
-                  "});"
-                ],
+                "exec": ["pm.test(\"Status code is 401\", function () {", "  pm.response.to.have.status(401);", "});"],
                 "type": "text/javascript",
                 "packages": {},
                 "requests": {}
@@ -213,25 +240,17 @@
               "listen": "prerequest",
               "script": {
                 "exec": [
-                  "try {",
-                  "    // Send a request to auth/register",
-                  "    const response = await pm.sendRequest({",
-                  "        url: pm.collectionVariables.get(\"base_url\") + \"/auth/register\",",
-                  "        method: \"POST\",",
-                  "        header: {",
-                  "            \"Content-Type\": \"application/json\"",
-                  "        },",
-                  "        body: JSON.stringify({",
-                  "            name: \"Test User\",",
-                  "            email: \"test_user@example.com\",",
-                  "            password: \"1234abcd@\",",
-                  "        })",
-                  "    });",
-                  "",
-                  "    ",
-                  "} catch (e) {",
-                  "    console.log(e);",
-                  "}"
+                  "// Send a request to auth/register",
+                  "pm.sendRequest({",
+                  "    url: pm.variables.get(\"base_url\") + \"/auth/register\",",
+                  "    method: \"POST\",",
+                  "    header: { \"Content-Type\": \"application/json\" },",
+                  "    body: JSON.stringify({",
+                  "        name: \"Test User\",",
+                  "        email: \"test_user@example.com\",",
+                  "        password: \"1234abcd@\",",
+                  "    })",
+                  "}, function (e, res) {});"
                 ],
                 "type": "text/javascript",
                 "packages": {},
@@ -240,6 +259,9 @@
             }
           ],
           "request": {
+            "auth": {
+              "type": "noauth"
+            },
             "method": "POST",
             "header": [],
             "body": {
@@ -253,35 +275,43 @@
             },
             "url": {
               "raw": "{{base_url}}/auth/login",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "auth",
-                "login"
-              ]
+              "host": ["{{base_url}}"],
+              "path": ["auth", "login"]
             },
             "description": "Authenticate user"
           },
           "response": []
         },
         {
-          "name": "[+] Login",
+          "name": "[+] Login (Success)",
           "event": [
             {
               "listen": "test",
               "script": {
                 "exec": [
+                  "const email = pm.variables.get(\"test_user_email\");",
+                  "const name = pm.variables.get(\"test_user_name\");",
+                  "",
                   "pm.test(\"Status code is 200\", function () {",
                   "  pm.response.to.have.status(200);",
                   "});",
                   "",
-                  "// response data has token",
-                  "pm.test(\"Response data has token\", function () {",
-                  "    const token = pm.response.json()?.data?.token;",
-                  "    pm.expect(token).not.to.be.undefined();",
-                  "    pm.collectionVariables.set(\"auth_token\", token);",
+                  "pm.test(\"Response data has user information\", function () {",
+                  "    const data = pm.response.json()?.data;",
+                  "    const token = data?.token;",
+                  "    ",
+                  "    pm.expect(token).to.be.a(\"string\");",
+                  "    pm.variables.set(\"auth_token\", token);",
+                  "",
+                  "",
+                  "    const userData = data?.user;",
+                  "    pm.expect(userData).to.have.property(\"userId\");",
+                  "    pm.expect(userData).to.have.property(\"email\");",
+                  "    pm.expect(userData).to.have.property(\"name\");",
+                  "    pm.expect(userData.email).to.equal(email);",
+                  "    pm.expect(userData.name).to.equal(name);",
                   "});",
+                  "",
                   ""
                 ],
                 "type": "text/javascript",
@@ -293,25 +323,19 @@
               "listen": "prerequest",
               "script": {
                 "exec": [
-                  "try {",
-                  "    // Send a request to auth/register",
-                  "    const response = await pm.sendRequest({",
-                  "        url: pm.collectionVariables.get(\"base_url\") + \"/auth/register\",",
-                  "        method: \"POST\",",
-                  "        header: {",
-                  "            \"Content-Type\": \"application/json\"",
-                  "        },",
-                  "        body: JSON.stringify({",
-                  "            name: \"Test User\",",
-                  "            email: \"test_user@example.com\",",
-                  "            password: \"1234abcd@\",",
-                  "        })",
-                  "    });",
+                  "const email = pm.variables.get(\"test_user_email\");",
+                  "const password = pm.variables.get(\"test_user_pwd\");",
+                  "const name = pm.variables.get(\"test_user_name\");",
                   "",
-                  "    ",
-                  "} catch (e) {",
-                  "    console.log(e);",
-                  "}"
+                  "pm.sendRequest({",
+                  "    url: pm.variables.get(\"base_url\") + \"/auth/register\",",
+                  "    method: \"POST\",",
+                  "    header: {",
+                  "        \"Content-Type\": \"application/json\"",
+                  "    },",
+                  "    body: JSON.stringify({ name, email, password }),",
+                  "});",
+                  ""
                 ],
                 "type": "text/javascript",
                 "packages": {},
@@ -320,11 +344,14 @@
             }
           ],
           "request": {
+            "auth": {
+              "type": "noauth"
+            },
             "method": "POST",
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"email\": \"test_user@example.com\",\n    \"password\": \"1234abcd@\"\n}",
+              "raw": "{\n    \"email\": \"{{test_user_email}}\",\n    \"password\": \"{{test_user_pwd}}\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -333,17 +360,35 @@
             },
             "url": {
               "raw": "{{base_url}}/auth/login",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "auth",
-                "login"
-              ]
+              "host": ["{{base_url}}"],
+              "path": ["auth", "login"]
             },
             "description": "Authenticate user"
           },
           "response": []
+        }
+      ],
+      "auth": {
+        "type": "noauth"
+      },
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {},
+            "exec": [""]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {},
+            "exec": [""]
+          }
         }
       ]
     },
@@ -351,14 +396,18 @@
       "name": "Chats",
       "item": [
         {
-          "name": "[-] Create",
+          "name": "[-] Create (No token)",
           "event": [
             {
               "listen": "test",
               "script": {
                 "exec": [
-                  "pm.test(\"Status code is 400\", function () {",
-                  "  pm.response.to.have.status(400);",
+                  "pm.test(\"Status code is 401\", function () {",
+                  "  pm.response.to.have.status(401);",
+                  "});",
+                  "",
+                  "pm.test(\"Fails if no valid token is sent\", function () {   ",
+                  "    pm.expect(pm.response.json().success).to.be.false;",
                   "});"
                 ],
                 "type": "text/javascript",
@@ -369,9 +418,7 @@
             {
               "listen": "prerequest",
               "script": {
-                "exec": [
-                  ""
-                ],
+                "exec": ["pm.request.headers.add({", "    key: 'Authorization',", "    value: \"\"", "});"],
                 "type": "text/javascript",
                 "packages": {},
                 "requests": {}
@@ -379,6 +426,71 @@
             }
           ],
           "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"title\": \"{{$randomLoremWords}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/chats",
+              "host": ["{{base_url}}"],
+              "path": ["chats"]
+            },
+            "description": "Create a new chat session"
+          },
+          "response": []
+        },
+        {
+          "name": "[-] Create (Bad token)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 401\", function () {",
+                  "  pm.response.to.have.status(401);",
+                  "});",
+                  "",
+                  "pm.test(\"Fails when the auth token is invalid or expired\", function () {",
+                  "    pm.expect(pm.response.json().success).to.be.false;",
+                  "    pm.expect(pm.response.json().error.message).to.include('token');",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [""],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bad_auth_token}}",
+                  "type": "string"
+                }
+              ]
+            },
             "method": "POST",
             "header": [],
             "body": {
@@ -392,26 +504,27 @@
             },
             "url": {
               "raw": "{{base_url}}/chats",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "chats"
-              ]
+              "host": ["{{base_url}}"],
+              "path": ["chats"]
             },
             "description": "Create a new chat session"
           },
           "response": []
         },
         {
-          "name": "[+] Create",
+          "name": "[-] Create (Missing title)",
           "event": [
             {
               "listen": "test",
               "script": {
                 "exec": [
-                  "pm.test(\"Status code is 201\", function () {",
-                  "  pm.response.to.have.status(201);",
+                  "pm.test(\"Status code is 400\", function () {",
+                  "  pm.response.to.have.status(400);",
+                  "});",
+                  "",
+                  "pm.test(\"Fails when title is missing\", function () {",
+                  "    pm.expect(pm.response.json().success).to.be.false;",
+                  "    pm.expect(pm.response.json().error.message).to.include('title');",
                   "});"
                 ],
                 "type": "text/javascript",
@@ -422,9 +535,7 @@
             {
               "listen": "prerequest",
               "script": {
-                "exec": [
-                  ""
-                ],
+                "exec": [""],
                 "type": "text/javascript",
                 "packages": {},
                 "requests": {}
@@ -436,7 +547,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"title\": \"{{$randomLoremText}}\"\n}",
+              "raw": "{\n    \n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -445,19 +556,58 @@
             },
             "url": {
               "raw": "{{base_url}}/chats",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "chats"
-              ]
+              "host": ["{{base_url}}"],
+              "path": ["chats"]
             },
             "description": "Create a new chat session"
           },
           "response": []
         },
         {
-          "name": "[-] List",
+          "name": "[+] Create (Success)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": ["pm.test(\"Status code is 201\", function () {", "  pm.response.to.have.status(201);", "});"],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [""],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"title\": \"{{$randomWords}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/chats",
+              "host": ["{{base_url}}"],
+              "path": ["chats"]
+            },
+            "description": "Create a new chat session"
+          },
+          "response": []
+        },
+        {
+          "name": "[-] List (No token)",
           "event": [
             {
               "listen": "test",
@@ -465,8 +615,21 @@
                 "exec": [
                   "pm.test(\"Status code is 401\", function () {",
                   "  pm.response.to.have.status(401);",
+                  "});",
+                  "",
+                  "pm.test(\"Fails if no valid token is sent\", function () {   ",
+                  "    pm.expect(pm.response.json().success).to.be.false;",
                   "});"
                 ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": ["pm.request.headers.add({", "    key: 'Authorization',", "    value: \"\"", "});"],
                 "type": "text/javascript",
                 "packages": {},
                 "requests": {}
@@ -493,19 +656,80 @@
             },
             "url": {
               "raw": "{{base_url}}/chats",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "chats"
-              ]
+              "host": ["{{base_url}}"],
+              "path": ["chats"]
             },
             "description": "List all chats for current user"
           },
           "response": []
         },
         {
-          "name": "[+] List",
+          "name": "[-] List (Bad token)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 401\", function () {",
+                  "  pm.response.to.have.status(401);",
+                  "});",
+                  "",
+                  "pm.test(\"Fails when the auth token is invalid or expired'\", function () {",
+                  "    pm.expect(pm.response.json().success).to.be.false;",
+                  "    pm.expect(pm.response.json().error.message).to.include('token');",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [""],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bad_auth_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/chats",
+              "host": ["{{base_url}}"],
+              "path": ["chats"]
+            },
+            "description": "List all chats for current user"
+          },
+          "response": []
+        },
+        {
+          "name": "[+] List (Success)",
           "event": [
             {
               "listen": "test",
@@ -513,6 +737,19 @@
                 "exec": [
                   "pm.test(\"Status code is 200\", function () {",
                   "  pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "// data: [{ _id, title, userId, createdAt }]",
+                  "pm.test(\"Response body contains an array of chat objects\", function () {",
+                  "    pm.expect(pm.response.json().success).to.be.true;",
+                  "    pm.expect(pm.response.json().data).to.be.an('array');",
+                  "\tconst firstChat = pm.response.json().data?.[0];",
+                  "    if (firstChat) {",
+                  "        pm.expect(firstChat).to.have.property('_id');",
+                  "        pm.expect(firstChat).to.have.property('title');",
+                  "        pm.expect(firstChat).to.have.property('userId');",
+                  "        pm.expect(firstChat).to.have.property('createdAt');",
+                  "    }",
                   "});"
                 ],
                 "type": "text/javascript",
@@ -538,19 +775,209 @@
             },
             "url": {
               "raw": "{{base_url}}/chats",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "chats"
-              ]
+              "host": ["{{base_url}}"],
+              "path": ["chats"]
             },
             "description": "List all chats for current user"
           },
           "response": []
         },
         {
-          "name": "[+] Get by ID",
+          "name": "[-] Get by ID (No token)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 401\", function () {",
+                  "  pm.response.to.have.status(401);",
+                  "});",
+                  "",
+                  "pm.test(\"Fails if no valid token is sent\", function () {   ",
+                  "    pm.expect(pm.response.json().success).to.be.false;",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": ["pm.request.headers.add({", "    key: 'Authorization',", "    value: \"\"", "});"],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/chats/:id",
+              "host": ["{{base_url}}"],
+              "path": ["chats", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "{{chat_id}}"
+                }
+              ]
+            },
+            "description": "Fetch one chat by ID"
+          },
+          "response": []
+        },
+        {
+          "name": "[-] Get by ID (Bad token)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 401\", function () {",
+                  "  pm.response.to.have.status(401);",
+                  "});",
+                  "",
+                  "pm.test(\"Fails when the auth token is invalid or expired\", function () {",
+                  "    pm.expect(pm.response.json().success).to.be.false;",
+                  "    pm.expect(pm.response.json().error.message).to.include('token');",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [""],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bad_auth_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/chats/:id",
+              "host": ["{{base_url}}"],
+              "path": ["chats", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "{{chat_id}}"
+                }
+              ]
+            },
+            "description": "Fetch one chat by ID"
+          },
+          "response": []
+        },
+        {
+          "name": "[-] Get by ID (Not found)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 404\", function () {",
+                  "  pm.response.to.have.status(404);",
+                  "});",
+                  "",
+                  "pm.test(\"Fails if a chat is not found\", function () {   ",
+                  "    pm.expect(pm.response.json().success).to.be.false;",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [""],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/chats/:id",
+              "host": ["{{base_url}}"],
+              "path": ["chats", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "{{invalid_id}}"
+                }
+              ]
+            },
+            "description": "Fetch one chat by ID"
+          },
+          "response": []
+        },
+        {
+          "name": "[+] Get by ID (Success)",
           "event": [
             {
               "listen": "test",
@@ -558,6 +985,24 @@
                 "exec": [
                   "pm.test(\"Status code is 200\", function () {",
                   "  pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Response body contains success and data\", function () {",
+                  "    pm.expect(pm.response.json().success).to.be.true;",
+                  "});",
+                  "",
+                  "pm.test(\"Response body contains chat and messages\", function () {",
+                  "    pm.response.to.have.jsonBody(\"data.chat\");",
+                  "    pm.response.to.have.jsonBody(\"data.messages\");",
+                  "    pm.expect(pm.response.json().data.messages).to.be.an(\"array\");",
+                  "});",
+                  "",
+                  "pm.test(\"Chat has expected properties\", function () {",
+                  "    const chat = pm.response.json().data.chat;",
+                  "    pm.expect(chat._id).to.be.a(\"string\");",
+                  "    pm.expect(chat.title).to.be.a(\"string\");",
+                  "    pm.expect(chat.userId).to.be.a(\"string\");",
+                  "    pm.expect(chat).to.have.property(\"createdAt\");",
                   "});"
                 ],
                 "type": "text/javascript",
@@ -569,25 +1014,25 @@
               "listen": "prerequest",
               "script": {
                 "exec": [
-                  "try {",
-                  "    const title = pm.variables.replaceIn(\"{{$randomLoremWords}}\")",
-                  "    const response = await pm.sendRequest({",
-                  "        url: pm.collectionVariables.get(\"base_url\") + \"/chats\",",
-                  "        method: \"POST\",",
-                  "        header: {",
-                  "            \"Content-Type\": \"application/json\",",
-                  "            \"Authorization\": \"Bearer \" + pm.collectionVariables.get(\"auth_token\"),",
-                  "        },",
-                  "        body: JSON.stringify({ title })",
-                  "    });",
-                  "    const result = await response.json();",
-                  "    console.log(\"[ID] result: \", result);",
-                  "    if (result?.data?._id) {",
-                  "        pm.collectionVariables.set(\"chat_id\", result.data._id);",
+                  "const title = pm.variables.replaceIn(\"{{$randomWords}}\");",
+                  "const reqOptions = {",
+                  "    url: pm.variables.get(\"base_url\") + \"/chats\",",
+                  "    method: \"POST\",",
+                  "    header: {",
+                  "        \"Content-Type\": \"application/json\",",
+                  "        \"Authorization\": \"Bearer \" + pm.variables.get(\"auth_token\"),",
+                  "    },",
+                  "    body: JSON.stringify({ title })",
+                  "};",
+                  "pm.sendRequest(reqOptions, function(err, response) {",
+                  "    if (response){",
+                  "    const result = response.json();",
+                  "        if (result?.data?._id) {",
+                  "            pm.variables.set(\"chat_id\", result.data._id);",
+                  "        }",
                   "    }",
-                  "} catch (e) {",
-                  "    console.log(e);",
-                  "}"
+                  "});",
+                  ""
                 ],
                 "type": "text/javascript",
                 "packages": {},
@@ -612,13 +1057,8 @@
             },
             "url": {
               "raw": "{{base_url}}/chats/:id",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "chats",
-                ":id"
-              ],
+              "host": ["{{base_url}}"],
+              "path": ["chats", ":id"],
               "variable": [
                 {
                   "key": "id",
@@ -631,14 +1071,18 @@
           "response": []
         },
         {
-          "name": "[-] Send Message",
+          "name": "[-] Send Message (No token)",
           "event": [
             {
               "listen": "test",
               "script": {
                 "exec": [
-                  "pm.test(\"Status code is 400\", function () {",
-                  "  pm.response.to.have.status(400);",
+                  "pm.test(\"Status code is 401\", function () {",
+                  "  pm.response.to.have.status(401);",
+                  "});",
+                  "",
+                  "pm.test(\"Fails if no valid token is sent\", function () {   ",
+                  "    pm.expect(pm.response.json().success).to.be.false;",
                   "});"
                 ],
                 "type": "text/javascript",
@@ -649,9 +1093,136 @@
             {
               "listen": "prerequest",
               "script": {
+                "exec": ["pm.request.headers.add({", "    key: 'Authorization',", "    value: \"\"", "});"],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/chats/:id/messages",
+              "host": ["{{base_url}}"],
+              "path": ["chats", ":id", "messages"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "{{chat_id}}"
+                }
+              ]
+            },
+            "description": "Send a message and get reply"
+          },
+          "response": []
+        },
+        {
+          "name": "[-] Send Message (Bad token)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
                 "exec": [
-                  "pm.collectionVariables.set(\"chat_id\", \"12345\");"
+                  "pm.test(\"Status code is 401\", function () {",
+                  "  pm.response.to.have.status(401);",
+                  "});",
+                  "",
+                  "pm.test(\"Fails when the auth token is invalid or expired'\", function () {",
+                  "    pm.expect(pm.response.json().success).to.be.false;",
+                  "    pm.expect(pm.response.json().error.message).to.include('token');",
+                  "});"
                 ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [""],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bad_auth_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/chats/:id/messages",
+              "host": ["{{base_url}}"],
+              "path": ["chats", ":id", "messages"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "{{chat_id}}"
+                }
+              ]
+            },
+            "description": "Send a message and get reply"
+          },
+          "response": []
+        },
+        {
+          "name": "[-] Send Message (Missing question)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 400\", function () {",
+                  "  pm.response.to.have.status(400);",
+                  "});",
+                  "",
+                  "pm.test(\"Fails when question is missing\", function () {",
+                  "    pm.expect(pm.response.json().success).to.be.false;",
+                  "    pm.expect(pm.response.json().error.message).to.include('question');",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [""],
                 "type": "text/javascript",
                 "packages": {},
                 "requests": {}
@@ -672,14 +1243,8 @@
             },
             "url": {
               "raw": "{{base_url}}/chats/:id/messages",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "chats",
-                ":id",
-                "messages"
-              ],
+              "host": ["{{base_url}}"],
+              "path": ["chats", ":id", "messages"],
               "variable": [
                 {
                   "key": "id",
@@ -692,7 +1257,64 @@
           "response": []
         },
         {
-          "name": "[+] Send Message",
+          "name": "[-] Send Message (Chat not found)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 404\", function () {",
+                  "  pm.response.to.have.status(404);",
+                  "});",
+                  "",
+                  "pm.test(\"Fails if a chat is not found\", function () {   ",
+                  "    pm.expect(pm.response.json().success).to.be.false;",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [""],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"question\": \"{{$randomWords}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/chats/:id/messages",
+              "host": ["{{base_url}}"],
+              "path": ["chats", ":id", "messages"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "{{invalid_id}}"
+                }
+              ]
+            },
+            "description": "Send a message and get reply"
+          },
+          "response": []
+        },
+        {
+          "name": "[+] Send Message (Success)",
           "event": [
             {
               "listen": "test",
@@ -700,6 +1322,14 @@
                 "exec": [
                   "pm.test(\"Status code is 201\", function () {",
                   "  pm.response.to.have.status(201);",
+                  "});",
+                  "",
+                  "pm.test(\"Response body contains the correct data structure\", function () {",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData[0]).to.have.property('_id');",
+                  "    pm.expect(jsonData[0]).to.have.property('chatId');",
+                  "    pm.expect(jsonData[0]).to.have.property('content');",
+                  "    pm.expect(jsonData[0]).to.have.property('createdAt');",
                   "});"
                 ],
                 "type": "text/javascript",
@@ -711,24 +1341,25 @@
               "listen": "prerequest",
               "script": {
                 "exec": [
-                  "try {",
-                  "    const title = pm.variables.replaceIn(\"{{$randomLoremWords}}\")",
-                  "    const response = await pm.sendRequest({",
-                  "        url: pm.collectionVariables.get(\"base_url\") + \"/chats\",",
-                  "        method: \"POST\",",
-                  "        header: {",
-                  "            \"Content-Type\": \"application/json\",",
-                  "            \"Authorization\": \"Bearer \" + pm.collectionVariables.get(\"auth_token\"),",
-                  "        },",
-                  "        body: JSON.stringify({ title })",
-                  "    });",
-                  "    const result = await response.json();",
-                  "    if (result?.data?._id) {",
-                  "        pm.collectionVariables.set(\"chat_id\", result.data._id);",
+                  "const title = pm.variables.replaceIn(\"{{$randomWords}}\");",
+                  "const reqOptions = {",
+                  "    url: pm.variables.get(\"base_url\") + \"/chats\",",
+                  "    method: \"POST\",",
+                  "    header: {",
+                  "        \"Content-Type\": \"application/json\",",
+                  "        \"Authorization\": \"Bearer \" + pm.variables.get(\"auth_token\"),",
+                  "    },",
+                  "    body: JSON.stringify({ title })",
+                  "};",
+                  "pm.sendRequest(reqOptions, function(err, response) {",
+                  "    if (response){",
+                  "    const result = response.json();",
+                  "        if (result?.data?._id) {",
+                  "            pm.variables.set(\"chat_id\", result.data._id);",
+                  "        }",
                   "    }",
-                  "} catch (e) {",
-                  "    console.log(e);",
-                  "}"
+                  "});",
+                  ""
                 ],
                 "type": "text/javascript",
                 "packages": {},
@@ -741,7 +1372,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"question\": \"{{$randomLoremSentence}}?\"\n}",
+              "raw": "{\n    \"question\": \"{{$randomWords}}?\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -750,14 +1381,8 @@
             },
             "url": {
               "raw": "{{base_url}}/chats/:id/messages",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "chats",
-                ":id",
-                "messages"
-              ],
+              "host": ["{{base_url}}"],
+              "path": ["chats", ":id", "messages"],
               "variable": [
                 {
                   "key": "id",
@@ -787,46 +1412,7 @@
             "type": "text/javascript",
             "packages": {},
             "requests": {},
-            "exec": [
-              "const email = \"test_user@example.com\";",
-              "const password = \"1234abcd@\";",
-              "",
-              "try {",
-              "    await pm.sendRequest({",
-              "        url: pm.collectionVariables.get(\"base_url\") + \"/auth/register\",",
-              "        method: \"POST\",",
-              "        header: {",
-              "            \"Content-Type\": \"application/json\"",
-              "        },",
-              "        body: JSON.stringify({",
-              "            name: \"Test User\",",
-              "            email,",
-              "            password,",
-              "        })",
-              "    });",
-              "    ",
-              "} catch (e) {",
-              "    console.log(e);",
-              "}",
-              "",
-              "try {",
-              "    const response = await pm.sendRequest({",
-              "        method: 'POST',",
-              "        url: pm.collectionVariables.get('base_url') + \"/auth/login\",",
-              "\t\t\t\theader: {",
-              "            \"Content-Type\": \"application/json\"",
-              "        },",
-              "        body: JSON.stringify({ email, password }),",
-              "    });",
-              "    const result = await response.json();",
-              "    if (result?.data?.token) {",
-              "        pm.collectionVariables.set('auth_token', result.data.token);",
-              "    }",
-              "} catch (e) {",
-              "    console.log(e);",
-              "}",
-              ""
-            ]
+            "exec": [""]
           }
         },
         {
@@ -835,9 +1421,7 @@
             "type": "text/javascript",
             "packages": {},
             "requests": {},
-            "exec": [
-              ""
-            ]
+            "exec": [""]
           }
         }
       ]
@@ -846,17 +1430,128 @@
       "name": "Documents",
       "item": [
         {
-          "name": "[-] Create",
+          "name": "[-] Create (No token)",
           "event": [
             {
               "listen": "test",
               "script": {
                 "exec": [
-                  "// No file sent",
-                  "pm.test(\"Status code is 400\", function () {",
-                  "  pm.response.to.have.status(400);",
+                  "pm.test(\"Status code is 401\", function () {",
+                  "  pm.response.to.have.status(401);",
+                  "});",
+                  "",
+                  "pm.test(\"Fails if no valid token is sent\", function () {   ",
+                  "    pm.expect(pm.response.json().success).to.be.false;",
                   "});"
                 ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": ["pm.request.headers.add({", "    key: 'Authorization',", "    value: \"\"", "});"],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/documents",
+              "host": ["{{base_url}}"],
+              "path": ["documents"]
+            },
+            "description": "Upload a document"
+          },
+          "response": []
+        },
+        {
+          "name": "[-] Create (Bad token)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 401\", function () {",
+                  "  pm.response.to.have.status(401);",
+                  "});",
+                  "",
+                  "pm.test(\"Fails when the auth token is invalid or expired\", function () {",
+                  "    pm.expect(pm.response.json().success).to.be.false;",
+                  "    pm.expect(pm.response.json().error.message).to.include('token');",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [""],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bad_auth_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/documents",
+              "host": ["{{base_url}}"],
+              "path": ["documents"]
+            },
+            "description": "Upload a document"
+          },
+          "response": []
+        },
+        {
+          "name": "[-] Create (No file)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": ["// No file sent", "pm.test(\"Status code is 400\", function () {", "  pm.response.to.have.status(400);", "});"],
                 "type": "text/javascript",
                 "packages": {},
                 "requests": {}
@@ -877,28 +1572,20 @@
             },
             "url": {
               "raw": "{{base_url}}/documents",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "documents"
-              ]
+              "host": ["{{base_url}}"],
+              "path": ["documents"]
             },
             "description": "Upload a document"
           },
           "response": []
         },
         {
-          "name": "[+] Create",
+          "name": "[+] Create (Success)",
           "event": [
             {
               "listen": "test",
               "script": {
-                "exec": [
-                  "pm.test(\"Status code is 201\", function () {",
-                  "  pm.response.to.have.status(201);",
-                  "});"
-                ],
+                "exec": ["pm.test(\"Status code is 201\", function () {", "  pm.response.to.have.status(201);", "});"],
                 "type": "text/javascript",
                 "packages": {},
                 "requests": {}
@@ -914,19 +1601,130 @@
             },
             "url": {
               "raw": "{{base_url}}/documents",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "documents"
-              ]
+              "host": ["{{base_url}}"],
+              "path": ["documents"]
             },
             "description": "Upload a document"
           },
           "response": []
         },
         {
-          "name": "[+] List",
+          "name": "[-] List (No token)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 401\", function () {",
+                  "  pm.response.to.have.status(401);",
+                  "});",
+                  "",
+                  "pm.test(\"Fails if no valid token is sent\", function () {   ",
+                  "    pm.expect(pm.response.json().success).to.be.false;",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": ["pm.request.headers.add({", "    key: 'Authorization',", "    value: \"\"", "});"],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/documents",
+              "host": ["{{base_url}}"],
+              "path": ["documents"]
+            },
+            "description": "List documents for current user"
+          },
+          "response": []
+        },
+        {
+          "name": "[-] List (Bad token)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 401\", function () {",
+                  "  pm.response.to.have.status(401);",
+                  "});",
+                  "",
+                  "pm.test(\"Fails when the auth token is invalid or expired\", function () {",
+                  "    pm.expect(pm.response.json().success).to.be.false;",
+                  "    pm.expect(pm.response.json().error.message).to.include('token');",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": ["pm.request.headers.add({", "    key: 'Authorization',", "    value: `{{vault:bearer-token}}`", "});"],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/documents",
+              "host": ["{{base_url}}"],
+              "path": ["documents"]
+            },
+            "description": "List documents for current user"
+          },
+          "response": []
+        },
+        {
+          "name": "[+] List (Success)",
           "event": [
             {
               "listen": "test",
@@ -934,6 +1732,11 @@
                 "exec": [
                   "pm.test(\"Status code is 200\", function () {",
                   "  pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Response body contains the correct data structure\", function () {",
+                  "    const jsonData = pm.response.json().data;",
+                  "    pm.expect(jsonData).to.be.an('array');",
                   "});"
                 ],
                 "type": "text/javascript",
@@ -959,12 +1762,8 @@
             },
             "url": {
               "raw": "{{base_url}}/documents",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "documents"
-              ]
+              "host": ["{{base_url}}"],
+              "path": ["documents"]
             },
             "description": "List documents for current user"
           },
@@ -988,46 +1787,7 @@
             "type": "text/javascript",
             "packages": {},
             "requests": {},
-            "exec": [
-              "const email = \"test_user@example.com\";",
-              "const password = \"1234abcd@\";",
-              "",
-              "try {",
-              "    await pm.sendRequest({",
-              "        url: pm.collectionVariables.get(\"base_url\") + \"/auth/register\",",
-              "        method: \"POST\",",
-              "        header: {",
-              "            \"Content-Type\": \"application/json\"",
-              "        },",
-              "        body: JSON.stringify({",
-              "            name: \"Test User\",",
-              "            email,",
-              "            password,",
-              "        })",
-              "    });",
-              "    ",
-              "} catch (e) {",
-              "    console.log(e);",
-              "}",
-              "",
-              "try {",
-              "    const response = await pm.sendRequest({",
-              "        method: 'POST',",
-              "        url: pm.collectionVariables.get('base_url') + \"/auth/login\",",
-              "\t\t\t\theader: {",
-              "            \"Content-Type\": \"application/json\"",
-              "        },",
-              "        body: JSON.stringify({ email, password }),",
-              "    });",
-              "    const result = await response.json();",
-              "    if (result?.data?.token) {",
-              "        pm.collectionVariables.set('auth_token', result.data.token);",
-              "    }",
-              "} catch (e) {",
-              "    console.log(e);",
-              "}",
-              ""
-            ]
+            "exec": [""]
           }
         },
         {
@@ -1036,9 +1796,7 @@
             "type": "text/javascript",
             "packages": {},
             "requests": {},
-            "exec": [
-              ""
-            ]
+            "exec": [""]
           }
         }
       ]
@@ -1047,14 +1805,18 @@
       "name": "Query & RAG",
       "item": [
         {
-          "name": "[-] Ask",
+          "name": "[-] Ask  (No token)",
           "event": [
             {
               "listen": "test",
               "script": {
                 "exec": [
-                  "pm.test(\"Status code is 400\", function () {",
-                  "  pm.response.to.have.status(400);",
+                  "pm.test(\"Status code is 401\", function () {",
+                  "  pm.response.to.have.status(401);",
+                  "});",
+                  "",
+                  "pm.test(\"Fails if no valid token is sent\", function () {   ",
+                  "    pm.expect(pm.response.json().success).to.be.false;",
                   "});"
                 ],
                 "type": "text/javascript",
@@ -1065,9 +1827,124 @@
             {
               "listen": "prerequest",
               "script": {
+                "exec": ["pm.request.headers.add({", "    key: 'Authorization',", "    value: \"\"", "});"],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/query",
+              "host": ["{{base_url}}"],
+              "path": ["query"]
+            },
+            "description": "Ask a question and get answer"
+          },
+          "response": []
+        },
+        {
+          "name": "[-] Ask (Bad token)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
                 "exec": [
-                  ""
+                  "pm.test(\"Status code is 401\", function () {",
+                  "  pm.response.to.have.status(401);",
+                  "});",
+                  "",
+                  "pm.test(\"Fails when the auth token is invalid or expired\", function () {",
+                  "    pm.expect(pm.response.json().success).to.be.false;",
+                  "    pm.expect(pm.response.json().error.message).to.include('token');",
+                  "});"
                 ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [""],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bad_auth_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/query",
+              "host": ["{{base_url}}"],
+              "path": ["query"]
+            },
+            "description": "Ask a question and get answer"
+          },
+          "response": []
+        },
+        {
+          "name": "[-] Ask (Missing question)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 400\", function () {",
+                  "  pm.response.to.have.status(400);",
+                  "});",
+                  "",
+                  "pm.test(\"Fails when question is missing\", function () {",
+                  "    pm.expect(pm.response.json().success).to.be.false;",
+                  "    pm.expect(pm.response.json().error.message).to.include('question');",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [""],
                 "type": "text/javascript",
                 "packages": {},
                 "requests": {}
@@ -1088,19 +1965,15 @@
             },
             "url": {
               "raw": "{{base_url}}/query",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "query"
-              ]
+              "host": ["{{base_url}}"],
+              "path": ["query"]
             },
-            "description": "Ask a question and get answer"
+            "description": "Send a message and get reply"
           },
           "response": []
         },
         {
-          "name": "[+] Ask",
+          "name": "[+] Ask (Success)",
           "event": [
             {
               "listen": "test",
@@ -1108,7 +1981,14 @@
                 "exec": [
                   "pm.test(\"Status code is 200\", function () {",
                   "  pm.response.to.have.status(200);",
-                  "});"
+                  "});",
+                  "",
+                  "pm.test(\"Response body contains success and data\", function () {",
+                  "    pm.expect(pm.response.json().success).to.be.true;",
+                  "    pm.expect(pm.response.json().data).to.not.be.null;",
+                  "});",
+                  "",
+                  "// data: { question, chunks: [{ id, documentId, text, score }], answer }"
                 ],
                 "type": "text/javascript",
                 "packages": {},
@@ -1118,9 +1998,7 @@
             {
               "listen": "prerequest",
               "script": {
-                "exec": [
-                  ""
-                ],
+                "exec": [""],
                 "type": "text/javascript",
                 "packages": {},
                 "requests": {}
@@ -1141,12 +2019,8 @@
             },
             "url": {
               "raw": "{{base_url}}/query",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "query"
-              ]
+              "host": ["{{base_url}}"],
+              "path": ["query"]
             },
             "description": "Ask a question and get answer"
           },
@@ -1170,46 +2044,7 @@
             "type": "text/javascript",
             "packages": {},
             "requests": {},
-            "exec": [
-              "const email = \"test_user@example.com\";",
-              "const password = \"1234abcd@\";",
-              "",
-              "try {",
-              "    await pm.sendRequest({",
-              "        url: pm.collectionVariables.get(\"base_url\") + \"/auth/register\",",
-              "        method: \"POST\",",
-              "        header: {",
-              "            \"Content-Type\": \"application/json\"",
-              "        },",
-              "        body: JSON.stringify({",
-              "            name: \"Test User\",",
-              "            email,",
-              "            password,",
-              "        })",
-              "    });",
-              "    ",
-              "} catch (e) {",
-              "    console.log(e);",
-              "}",
-              "",
-              "try {",
-              "    const response = await pm.sendRequest({",
-              "        method: 'POST',",
-              "        url: pm.collectionVariables.get('base_url') + \"/auth/login\",",
-              "\t\t\t\theader: {",
-              "            \"Content-Type\": \"application/json\"",
-              "        },",
-              "        body: JSON.stringify({ email, password }),",
-              "    });",
-              "    const result = await response.json();",
-              "    if (result?.data?.token) {",
-              "        pm.collectionVariables.set('auth_token', result.data.token);",
-              "    }",
-              "} catch (e) {",
-              "    console.log(e);",
-              "}",
-              ""
-            ]
+            "exec": [""]
           }
         },
         {
@@ -1218,14 +2053,22 @@
             "type": "text/javascript",
             "packages": {},
             "requests": {},
-            "exec": [
-              ""
-            ]
+            "exec": [""]
           }
         }
       ]
     }
   ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{auth_token}}",
+        "type": "string"
+      }
+    ]
+  },
   "event": [
     {
       "listen": "prerequest",
@@ -1234,6 +2077,58 @@
         "packages": {},
         "requests": {},
         "exec": [
+          "// check if auth is enabled",
+          "const isAuthDesabled = pm.request.auth?.type === 'noauth';",
+          "if (isAuthDesabled) return;",
+          "",
+          "try {",
+          "    const jwtToken = pm.variables.get('auth_token');",
+          "    if (jwtToken) {",
+          "        let base64Url = jwtToken.split('.')[1];",
+          "        let base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');",
+          "        let decodedString = Buffer.from(base64, 'base64').toString('utf-8');",
+          "        let decoded = JSON.parse(decodedString);",
+          "        ",
+          "        if (decoded?.exp && decoded.userId) {",
+          "            if (decoded.exp * 1000 > Date.now()) return;",
+          "        }",
+          "    }",
+          "} catch (e) {",
+          "    console.log(\"token error: \", e);",
+          "}",
+          "",
+          "",
+          "const email = pm.variables.get(\"test_user_email\");",
+          "const password = pm.variables.get(\"test_user_pwd\");",
+          "const name = pm.variables.get(\"test_user_name\");",
+          "",
+          "const reqOptions = {",
+          "    url: pm.variables.get(\"base_url\") + \"/auth/register\",",
+          "    method: \"POST\",",
+          "    header: { \"Content-Type\": \"application/json\" },",
+          "    body: JSON.stringify({ name, email, password }),",
+          "};",
+          "const req2Options = {",
+          "    method: 'POST',",
+          "    url: pm.variables.get('base_url') + \"/auth/login\",",
+          "    header: { \"Content-Type\": \"application/json\" },",
+          "    body: JSON.stringify({ email, password }),",
+          "};",
+          "",
+          "pm.sendRequest(reqOptions, function (err, response) {",
+          "    pm.sendRequest(req2Options, function(err2, response2) {",
+          "        if (response2) {",
+          "            const result = response2.json();",
+          "            if (result?.data?.token) {",
+          "                console.log(\"token: \", result.data.token);",
+          "                pm.variables.set('auth_token', result.data.token);",
+          "            }",
+          "        }",
+          "    });",
+          "});",
+          "",
+          "",
+          "",
           ""
         ]
       }
@@ -1244,9 +2139,7 @@
         "type": "text/javascript",
         "packages": {},
         "requests": {},
-        "exec": [
-          ""
-        ]
+        "exec": [""]
       }
     }
   ],
@@ -1265,6 +2158,34 @@
     },
     {
       "key": "auth_token",
+      "value": ""
+    },
+    {
+      "key": "test_user_email",
+      "value": ""
+    },
+    {
+      "key": "test_user_pwd",
+      "value": ""
+    },
+    {
+      "key": "test_user_name",
+      "value": ""
+    },
+    {
+      "key": "test_user_email_2",
+      "value": ""
+    },
+    {
+      "key": "test_user_pwd_2",
+      "value": ""
+    },
+    {
+      "key": "bad_auth_token",
+      "value": ""
+    },
+    {
+      "key": "invalid_id",
       "value": ""
     }
   ]
