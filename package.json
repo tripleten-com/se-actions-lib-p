@@ -1,10 +1,11 @@
 {
   "name": "se-actions-lib",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "type": "module",
   "files": [
     "dist",
-    "bin"
+    "bin",
+    "bin/files/countries_of_the_world_1.pdf"
   ],
   "main": "dist/index.js",
   "module": "dist/index.js",

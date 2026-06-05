@@ -4,7 +4,10 @@ source "$SCRIPT_DIR/pre-run.sh"
 
 npm install -g newman --no-fund --no-audit --loglevel=error
 
+POSTMAN_FILE="$SCRIPT_DIR/files/countries_of_the_world_1.pdf"
+
 timeout 60 bash "$SCRIPT_DIR/newman.sh" "$SCRIPT_DIR/collections/mesh_ai_tests_2.json" \
+  --env-var "postman_file_path=$POSTMAN_FILE" \
   --env-var "base_url=http://localhost:3000" \
   --env-var "test_user_email=elisebouer@gmail.com" \
   --env-var "test_user_pwd=1234Abcd@" \

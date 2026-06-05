@@ -16,11 +16,7 @@
             {
               "listen": "test",
               "script": {
-                "exec": [
-                  "pm.test(\"Status code is 201\", function () {",
-                  "  pm.response.to.have.status(201);",
-                  "});"
-                ],
+                "exec": ["pm.test(\"Status code is 201\", function () {", "  pm.response.to.have.status(201);", "});"],
                 "type": "text/javascript",
                 "packages": {},
                 "requests": {}
@@ -41,13 +37,8 @@
             },
             "url": {
               "raw": "{{base_url}}/auth/register",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "auth",
-                "register"
-              ]
+              "host": ["{{base_url}}"],
+              "path": ["auth", "register"]
             },
             "description": "Create a new user account"
           },
@@ -59,11 +50,7 @@
             {
               "listen": "test",
               "script": {
-                "exec": [
-                  "pm.test(\"Status code is 200\", function () {",
-                  "  pm.response.to.have.status(200);",
-                  "});"
-                ],
+                "exec": ["pm.test(\"Status code is 200\", function () {", "  pm.response.to.have.status(200);", "});"],
                 "type": "text/javascript",
                 "packages": {},
                 "requests": {}
@@ -84,13 +71,8 @@
             },
             "url": {
               "raw": "{{base_url}}/auth/login",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "auth",
-                "login"
-              ]
+              "host": ["{{base_url}}"],
+              "path": ["auth", "login"]
             },
             "description": "Authenticate user"
           },
@@ -102,11 +84,7 @@
             {
               "listen": "test",
               "script": {
-                "exec": [
-                  "pm.test(\"Status code is 200\", function () {",
-                  "  pm.response.to.have.status(200);",
-                  "});"
-                ],
+                "exec": ["pm.test(\"Status code is 200\", function () {", "  pm.response.to.have.status(200);", "});"],
                 "type": "text/javascript",
                 "packages": {},
                 "requests": {}
@@ -130,13 +108,8 @@
             },
             "url": {
               "raw": "{{base_url}}/auth/me",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "auth",
-                "me"
-              ]
+              "host": ["{{base_url}}"],
+              "path": ["auth", "me"]
             },
             "description": "Get current user profile"
           },
@@ -153,11 +126,7 @@
             {
               "listen": "test",
               "script": {
-                "exec": [
-                  "pm.test(\"Status code is 201\", function () {",
-                  "  pm.response.to.have.status(201);",
-                  "});"
-                ],
+                "exec": ["pm.test(\"Status code is 201\", function () {", "  pm.response.to.have.status(201);", "});"],
                 "type": "text/javascript",
                 "packages": {},
                 "requests": {}
@@ -178,12 +147,8 @@
             },
             "url": {
               "raw": "{{base_url}}/chats",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "chats"
-              ]
+              "host": ["{{base_url}}"],
+              "path": ["chats"]
             },
             "description": "Create a new chat session"
           },
@@ -195,11 +160,7 @@
             {
               "listen": "test",
               "script": {
-                "exec": [
-                  "pm.test(\"Status code is 200\", function () {",
-                  "  pm.response.to.have.status(200);",
-                  "});"
-                ],
+                "exec": ["pm.test(\"Status code is 200\", function () {", "  pm.response.to.have.status(200);", "});"],
                 "type": "text/javascript",
                 "packages": {},
                 "requests": {}
@@ -223,12 +184,8 @@
             },
             "url": {
               "raw": "{{base_url}}/chats",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "chats"
-              ]
+              "host": ["{{base_url}}"],
+              "path": ["chats"]
             },
             "description": "List all chats for current user"
           },
@@ -240,11 +197,7 @@
             {
               "listen": "test",
               "script": {
-                "exec": [
-                  "pm.test(\"Status code is 200\", function () {",
-                  "  pm.response.to.have.status(200);",
-                  "});"
-                ],
+                "exec": ["pm.test(\"Status code is 200\", function () {", "  pm.response.to.have.status(200);", "});"],
                 "type": "text/javascript",
                 "packages": {},
                 "requests": {}
@@ -253,9 +206,7 @@
             {
               "listen": "prerequest",
               "script": {
-                "exec": [
-                  "pm.collectionVariables.set(\"chat_id\", \"12345\");"
-                ],
+                "exec": ["pm.variables.set(\"chat_id\", \"12345\");"],
                 "type": "text/javascript",
                 "packages": {},
                 "requests": {}
@@ -279,13 +230,8 @@
             },
             "url": {
               "raw": "{{base_url}}/chats/:id",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "chats",
-                ":id"
-              ],
+              "host": ["{{base_url}}"],
+              "path": ["chats", ":id"],
               "variable": [
                 {
                   "key": "id",
@@ -303,11 +249,7 @@
             {
               "listen": "test",
               "script": {
-                "exec": [
-                  "pm.test(\"Status code is 201\", function () {",
-                  "  pm.response.to.have.status(201);",
-                  "});"
-                ],
+                "exec": ["pm.test(\"Status code is 201\", function () {", "  pm.response.to.have.status(201);", "});"],
                 "type": "text/javascript",
                 "packages": {},
                 "requests": {}
@@ -316,9 +258,7 @@
             {
               "listen": "prerequest",
               "script": {
-                "exec": [
-                  "pm.collectionVariables.set(\"chat_id\", \"12345\");"
-                ],
+                "exec": ["pm.variables.set(\"chat_id\", \"12345\");"],
                 "type": "text/javascript",
                 "packages": {},
                 "requests": {}
@@ -339,14 +279,8 @@
             },
             "url": {
               "raw": "{{base_url}}/chats/:id/messages",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "chats",
-                ":id",
-                "messages"
-              ],
+              "host": ["{{base_url}}"],
+              "path": ["chats", ":id", "messages"],
               "variable": [
                 {
                   "key": "id",
@@ -364,11 +298,7 @@
             {
               "listen": "test",
               "script": {
-                "exec": [
-                  "pm.test(\"Status code is 204\", function () {",
-                  "  pm.response.to.have.status(204);",
-                  "});"
-                ],
+                "exec": ["pm.test(\"Status code is 204\", function () {", "  pm.response.to.have.status(204);", "});"],
                 "type": "text/javascript",
                 "packages": {},
                 "requests": {}
@@ -377,9 +307,7 @@
             {
               "listen": "prerequest",
               "script": {
-                "exec": [
-                  "pm.collectionVariables.set(\"chat_id\", \"12345\");"
-                ],
+                "exec": ["pm.variables.set(\"chat_id\", \"12345\");"],
                 "type": "text/javascript",
                 "packages": {},
                 "requests": {}
@@ -400,13 +328,8 @@
             },
             "url": {
               "raw": "{{base_url}}/chats/:id",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "chats",
-                ":id"
-              ],
+              "host": ["{{base_url}}"],
+              "path": ["chats", ":id"],
               "variable": [
                 {
                   "key": "id",
@@ -429,11 +352,7 @@
             {
               "listen": "test",
               "script": {
-                "exec": [
-                  "pm.test(\"Status code is 201\", function () {",
-                  "  pm.response.to.have.status(201);",
-                  "});"
-                ],
+                "exec": ["pm.test(\"Status code is 201\", function () {", "  pm.response.to.have.status(201);", "});"],
                 "type": "text/javascript",
                 "packages": {},
                 "requests": {}
@@ -454,12 +373,8 @@
             },
             "url": {
               "raw": "{{base_url}}/documents",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "documents"
-              ]
+              "host": ["{{base_url}}"],
+              "path": ["documents"]
             },
             "description": "Upload a document"
           },
@@ -471,11 +386,7 @@
             {
               "listen": "test",
               "script": {
-                "exec": [
-                  "pm.test(\"Status code is 200\", function () {",
-                  "  pm.response.to.have.status(200);",
-                  "});"
-                ],
+                "exec": ["pm.test(\"Status code is 200\", function () {", "  pm.response.to.have.status(200);", "});"],
                 "type": "text/javascript",
                 "packages": {},
                 "requests": {}
@@ -499,12 +410,8 @@
             },
             "url": {
               "raw": "{{base_url}}/documents",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "documents"
-              ]
+              "host": ["{{base_url}}"],
+              "path": ["documents"]
             },
             "description": "List documents for current user"
           },
@@ -516,11 +423,7 @@
             {
               "listen": "test",
               "script": {
-                "exec": [
-                  "pm.test(\"Status code is 200\", function () {",
-                  "  pm.response.to.have.status(200);",
-                  "});"
-                ],
+                "exec": ["pm.test(\"Status code is 200\", function () {", "  pm.response.to.have.status(200);", "});"],
                 "type": "text/javascript",
                 "packages": {},
                 "requests": {}
@@ -529,9 +432,7 @@
             {
               "listen": "prerequest",
               "script": {
-                "exec": [
-                  "pm.collectionVariables.set(\"document_id\", \"12345\");"
-                ],
+                "exec": ["pm.variables.set(\"document_id\", \"12345\");"],
                 "type": "text/javascript",
                 "packages": {},
                 "requests": {}
@@ -555,13 +456,8 @@
             },
             "url": {
               "raw": "{{base_url}}/documents/:id",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "documents",
-                ":id"
-              ],
+              "host": ["{{base_url}}"],
+              "path": ["documents", ":id"],
               "variable": [
                 {
                   "key": "id",
@@ -579,11 +475,7 @@
             {
               "listen": "test",
               "script": {
-                "exec": [
-                  "pm.test(\"Status code is 204\", function () {",
-                  "  pm.response.to.have.status(204);",
-                  "});"
-                ],
+                "exec": ["pm.test(\"Status code is 204\", function () {", "  pm.response.to.have.status(204);", "});"],
                 "type": "text/javascript",
                 "packages": {},
                 "requests": {}
@@ -592,9 +484,7 @@
             {
               "listen": "prerequest",
               "script": {
-                "exec": [
-                  "pm.collectionVariables.set(\"document_id\", \"12345\");"
-                ],
+                "exec": ["pm.variables.set(\"document_id\", \"12345\");"],
                 "type": "text/javascript",
                 "packages": {},
                 "requests": {}
@@ -615,13 +505,8 @@
             },
             "url": {
               "raw": "{{base_url}}/documents/:id",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "documents",
-                ":id"
-              ],
+              "host": ["{{base_url}}"],
+              "path": ["documents", ":id"],
               "variable": [
                 {
                   "key": "id",
@@ -644,11 +529,7 @@
             {
               "listen": "test",
               "script": {
-                "exec": [
-                  "pm.test(\"Status code is 200\", function () {",
-                  "  pm.response.to.have.status(200);",
-                  "});"
-                ],
+                "exec": ["pm.test(\"Status code is 200\", function () {", "  pm.response.to.have.status(200);", "});"],
                 "type": "text/javascript",
                 "packages": {},
                 "requests": {}
@@ -676,12 +557,8 @@
             },
             "url": {
               "raw": "{{base_url}}/query",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "query"
-              ]
+              "host": ["{{base_url}}"],
+              "path": ["query"]
             },
             "description": "Ask a question and get answer"
           },

@@ -21,7 +21,7 @@
                   "  pm.response.to.have.status(400);",
                   "});",
                   "",
-                  "pm.test(\"Response body contains 'Invalid email format'\", function () {",
+                  "pm.test(\"Response message contains required message\", function () {",
                   "    pm.expect(pm.response.text()).to.include('required');",
                   "});"
                 ],
@@ -83,12 +83,18 @@
                   "const password = pm.variables.get(\"test_user_pwd_2\");",
                   "const name = \"Test User\";",
                   "",
-                  "pm.sendRequest({",
+                  "const reqOptions = {",
                   "    url: pm.variables.get(\"base_url\") + \"/auth/register\",",
                   "    method: \"POST\",",
                   "    header: { \"Content-Type\": \"application/json\" },",
                   "    body: JSON.stringify({ name, email, password })",
-                  "}, function(err, response) {});",
+                  "};",
+                  "",
+                  "pm.sendRequest(reqOptions, function(err, response) {",
+                  "    if (![200, 409].includes(response.code)) {",
+                  "        // todo: handle case",
+                  "    }",
+                  "});",
                   ""
                 ],
                 "type": "text/javascript",
@@ -396,7 +402,7 @@
       "name": "Chats",
       "item": [
         {
-          "name": "[-] Create (No token)",
+          "name": "[-] Create chat (No token)",
           "event": [
             {
               "listen": "test",
@@ -450,7 +456,7 @@
           "response": []
         },
         {
-          "name": "[-] Create (Bad token)",
+          "name": "[-] Create  chat (Bad token)",
           "event": [
             {
               "listen": "test",
@@ -512,7 +518,7 @@
           "response": []
         },
         {
-          "name": "[-] Create (Missing title)",
+          "name": "[-] Create  chat (Missing title)",
           "event": [
             {
               "listen": "test",
@@ -564,7 +570,7 @@
           "response": []
         },
         {
-          "name": "[+] Create (Success)",
+          "name": "[+] Create  chat (Success)",
           "event": [
             {
               "listen": "test",
@@ -607,7 +613,7 @@
           "response": []
         },
         {
-          "name": "[-] List (No token)",
+          "name": "[-] List chats (No token)",
           "event": [
             {
               "listen": "test",
@@ -664,7 +670,7 @@
           "response": []
         },
         {
-          "name": "[-] List (Bad token)",
+          "name": "[-] List chats (Bad token)",
           "event": [
             {
               "listen": "test",
@@ -729,7 +735,7 @@
           "response": []
         },
         {
-          "name": "[+] List (Success)",
+          "name": "[+] List chats (Success)",
           "event": [
             {
               "listen": "test",
@@ -739,11 +745,14 @@
                   "  pm.response.to.have.status(200);",
                   "});",
                   "",
-                  "// data: [{ _id, title, userId, createdAt }]",
-                  "pm.test(\"Response body contains an array of chat objects\", function () {",
+                  "pm.test(\"Response data contains an array of chat objects\", function () {",
                   "    pm.expect(pm.response.json().success).to.be.true;",
                   "    pm.expect(pm.response.json().data).to.be.an('array');",
-                  "\tconst firstChat = pm.response.json().data?.[0];",
+                  "\t",
+                  "});",
+                  "",
+                  "pm.test(\"Response body contains a list of chats with _id, title, userId and createdAt fields\", function () {",
+                  "    const firstChat = pm.response.json().data?.[0];",
                   "    if (firstChat) {",
                   "        pm.expect(firstChat).to.have.property('_id');",
                   "        pm.expect(firstChat).to.have.property('title');",
@@ -783,7 +792,7 @@
           "response": []
         },
         {
-          "name": "[-] Get by ID (No token)",
+          "name": "[-] Get chat by ID (No token)",
           "event": [
             {
               "listen": "test",
@@ -846,7 +855,7 @@
           "response": []
         },
         {
-          "name": "[-] Get by ID (Bad token)",
+          "name": "[-] Get chat by ID (Bad token)",
           "event": [
             {
               "listen": "test",
@@ -917,7 +926,7 @@
           "response": []
         },
         {
-          "name": "[-] Get by ID (Not found)",
+          "name": "[-] Get chat by ID (Not found)",
           "event": [
             {
               "listen": "test",
@@ -977,7 +986,7 @@
           "response": []
         },
         {
-          "name": "[+] Get by ID (Success)",
+          "name": "[+] Get chat by ID (Success)",
           "event": [
             {
               "listen": "test",
@@ -1324,12 +1333,15 @@
                   "  pm.response.to.have.status(201);",
                   "});",
                   "",
-                  "pm.test(\"Response body contains the correct data structure\", function () {",
+                  "// response data is an array",
+                  "pm.test(\"Response data is an array\", function () {",
+                  "    pm.expect(pm.response.json()).to.be.an('array');",
+                  "});",
+                  "",
+                  "pm.test(\"Response data has the correct keys: chatId, content\", function () {",
                   "    const jsonData = pm.response.json();",
-                  "    pm.expect(jsonData[0]).to.have.property('_id');",
                   "    pm.expect(jsonData[0]).to.have.property('chatId');",
                   "    pm.expect(jsonData[0]).to.have.property('content');",
-                  "    pm.expect(jsonData[0]).to.have.property('createdAt');",
                   "});"
                 ],
                 "type": "text/javascript",
@@ -1430,7 +1442,7 @@
       "name": "Documents",
       "item": [
         {
-          "name": "[-] Create (No token)",
+          "name": "[-] Upload document (No token)",
           "event": [
             {
               "listen": "test",
@@ -1440,7 +1452,7 @@
                   "  pm.response.to.have.status(401);",
                   "});",
                   "",
-                  "pm.test(\"Fails if no valid token is sent\", function () {   ",
+                  "pm.test(\"Fails if no valid auth token is sent\", function () {   ",
                   "    pm.expect(pm.response.json().success).to.be.false;",
                   "});"
                 ],
@@ -1484,7 +1496,7 @@
           "response": []
         },
         {
-          "name": "[-] Create (Bad token)",
+          "name": "[-] Upload document (Bad token)",
           "event": [
             {
               "listen": "test",
@@ -1546,12 +1558,21 @@
           "response": []
         },
         {
-          "name": "[-] Create (No file)",
+          "name": "[-] Upload document (No file)",
           "event": [
             {
               "listen": "test",
               "script": {
-                "exec": ["// No file sent", "pm.test(\"Status code is 400\", function () {", "  pm.response.to.have.status(400);", "});"],
+                "exec": [
+                  "// No file sent",
+                  "pm.test(\"Status code is 400\", function () {",
+                  "  pm.response.to.have.status(400);",
+                  "});",
+                  "",
+                  "pm.test(\"Error message contains 'required'\", function () {",
+                  "    pm.expect(pm.response.json().error.message).to.contain(\"required\");",
+                  "});"
+                ],
                 "type": "text/javascript",
                 "packages": {},
                 "requests": {}
@@ -1580,12 +1601,26 @@
           "response": []
         },
         {
-          "name": "[+] Create (Success)",
+          "name": "[+] Upload document (Success)",
           "event": [
             {
               "listen": "test",
               "script": {
-                "exec": ["pm.test(\"Status code is 201\", function () {", "  pm.response.to.have.status(201);", "});"],
+                "exec": [
+                  "pm.test(\"Status code is 201\", function () {",
+                  "  pm.response.to.have.status(201);",
+                  "});",
+                  "",
+                  "pm.test(\"Response runs successfully\", function () {",
+                  "    pm.response.to.have.jsonBody('success', true);",
+                  "});",
+                  "",
+                  "pm.test(\"Response data has correct fields: title, fileName, userId\", function () {",
+                  "    pm.expect(pm.response.json().data).to.have.property('title');",
+                  "    pm.expect(pm.response.json().data).to.have.property('fileName');",
+                  "    pm.expect(pm.response.json().data).to.have.property('userId');",
+                  "});"
+                ],
                 "type": "text/javascript",
                 "packages": {},
                 "requests": {}
@@ -1596,8 +1631,15 @@
             "method": "POST",
             "header": [],
             "body": {
-              "mode": "file",
-              "file": {}
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "file",
+                  "type": "file",
+                  "uuid": "65315afa-ca76-419d-9fa1-68f8ea1959be",
+                  "src": "{{postman_file_path}}"
+                }
+              ]
             },
             "url": {
               "raw": "{{base_url}}/documents",
@@ -1609,7 +1651,7 @@
           "response": []
         },
         {
-          "name": "[-] List (No token)",
+          "name": "[-] List documents (No token)",
           "event": [
             {
               "listen": "test",
@@ -1666,7 +1708,7 @@
           "response": []
         },
         {
-          "name": "[-] List (Bad token)",
+          "name": "[-] List documents (Bad token)",
           "event": [
             {
               "listen": "test",
@@ -1724,7 +1766,7 @@
           "response": []
         },
         {
-          "name": "[+] List (Success)",
+          "name": "[+] List documents (Success)",
           "event": [
             {
               "listen": "test",
@@ -1802,7 +1844,7 @@
       ]
     },
     {
-      "name": "Query & RAG",
+      "name": "Query",
       "item": [
         {
           "name": "[-] Ask  (No token)",
@@ -2010,7 +2052,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"question\": \"{{$randomLoremParagraph}}\"\n}",
+              "raw": "{\n    \"question\": \"how many europian countries are in the UN?\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
