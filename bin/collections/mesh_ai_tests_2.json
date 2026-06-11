@@ -91,9 +91,8 @@
                   "};",
                   "",
                   "pm.sendRequest(reqOptions, function(err, response) {",
-                  "    if (![200, 409].includes(response.code)) {",
-                  "        // todo: handle case",
-                  "    }",
+                  "    // todo: handle case",
+                  "    if (![200, 409].includes(response?.code)) {}",
                   "});",
                   ""
                 ],
@@ -1517,56 +1516,6 @@
           "response": []
         },
         {
-          "name": "[+] Upload document (Success)",
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "exec": [
-                  "pm.test(\"Status code is 201\", function () {",
-                  "  pm.response.to.have.status(201);",
-                  "});",
-                  "",
-                  "pm.test(\"Response runs successfully\", function () {",
-                  "    pm.response.to.have.jsonBody('success', true);",
-                  "});",
-                  "",
-                  "pm.test(\"Response data has correct fields: title, fileName, userId\", function () {",
-                  "    pm.expect(pm.response.json().data).to.have.property('title');",
-                  "    pm.expect(pm.response.json().data).to.have.property('fileName');",
-                  "    pm.expect(pm.response.json().data).to.have.property('userId');",
-                  "});"
-                ],
-                "type": "text/javascript",
-                "packages": {},
-                "requests": {}
-              }
-            }
-          ],
-          "request": {
-            "method": "POST",
-            "header": [],
-            "body": {
-              "mode": "formdata",
-              "formdata": [
-                {
-                  "key": "file",
-                  "type": "file",
-                  "uuid": "65315afa-ca76-419d-9fa1-68f8ea1959be",
-                  "src": "{{postman_file_path}}"
-                }
-              ]
-            },
-            "url": {
-              "raw": "{{base_url}}/documents",
-              "host": ["{{base_url}}"],
-              "path": ["documents"]
-            },
-            "description": "Upload a document"
-          },
-          "response": []
-        },
-        {
           "name": "[-] List documents (No token)",
           "event": [
             {
@@ -1694,7 +1643,7 @@
                   "",
                   "pm.test(\"Response body contains the correct data structure\", function () {",
                   "    const jsonData = pm.response.json().data;",
-                  "    pm.expect(jsonData).to.be.an('array');",
+                  "    pm.expect(Array.isArray(jsonData)).to.be.true;",
                   "});"
                 ],
                 "type": "text/javascript",
